@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.vite/
+
+# Vercel local state
+.vercel/
+
+# Environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local tooling and agent state
+.agents/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.impeccable/
+.playwright-mcp/
+
+# Internal source/reference material
+assets/
+PRODUCT.md
+DESIGN.md
+*.pptx
+/wibify-services-reference.png
+
+# Legacy files not used by the Vite site
+/css/
+/js/
+
+# Local screenshots and browser artifacts
+/*.png
+/*.yml
+design.json
+live/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

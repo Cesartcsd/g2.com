@@ -1,0 +1,25 @@
+{
+  "name": "site-g2",
+  "version": "1.0.0",
+  "description": "G2 Tecnologia - Site Institucional com Vite",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "g2",
+    "tecnologia",
+    "automacao",
+    "industria"
+  ],
+  "author": "Guga Bauru",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0"
+  }
+}
