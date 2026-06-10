@@ -17,19 +17,19 @@ pnpm-debug.log*
 .impeccable/
 .playwright-mcp/
 
-assets/
+/assets/
 PRODUCT.md
 DESIGN.md
 *.pptx
 wibify-services-reference.png
 
-css/
-js/
+/css/
+/js/
 
-*.png
-*.yml
-design.json
-live/
+/*.png
+/*.yml
+/design.json
+/live/
 
 .DS_Store
 Thumbs.db
