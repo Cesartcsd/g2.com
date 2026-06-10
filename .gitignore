@@ -48,3 +48,5 @@ live/
 # OS/editor noise
 .DS_Store
 Thumbs.db
+
+.vercel
