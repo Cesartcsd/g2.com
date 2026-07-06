@@ -282,7 +282,8 @@ select {
 }
 
 .g2-scene.is-reduced-motion,
-.g2-scene.is-poster-only {
+.g2-scene.is-poster-only,
+.g2-scene.is-seeking {
   opacity: 0.5;
 }
 
@@ -334,7 +335,7 @@ select {
 }
 
 .hero-content {
-  max-width: 810px;
+  max-width: 900px;
   margin-left: 0;
   margin-right: auto;
   padding-left: 28px;
@@ -368,7 +369,7 @@ select {
 }
 
 .hero-title {
-  max-width: 760px;
+  max-width: 860px;
   font-size: 4.2rem;
 }
 
@@ -431,7 +432,7 @@ select {
 }
 
 .solution-stack-readout {
-  width: min(100%, 340px);
+  width: min(100%, 360px);
   margin-top: 28px;
   padding: 14px;
   border: 1px solid var(--line);
@@ -493,8 +494,16 @@ select {
 
 .solution-card:hover,
 .application-card:hover,
-.process-step:hover {
+.process-step:hover,
+.secondary-solution:hover {
   border-color: var(--line-strong);
+}
+
+.card-topline {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .card-index {
@@ -503,9 +512,36 @@ select {
   font-weight: 800;
 }
 
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 10px;
+  color: var(--on-accent);
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  border-radius: 999px;
+  background: var(--ice-cyan);
+}
+
+.solution-card-primary {
+  border-color: var(--line-strong);
+  background:
+    linear-gradient(180deg, rgba(11, 95, 143, 0.34), rgba(2, 16, 28, 0.98)),
+    linear-gradient(180deg, var(--surface-strong), rgba(2, 16, 28, 0.96));
+  box-shadow: 0 26px 80px rgba(0, 72, 120, 0.24);
+}
+
+.solution-card-primary::before {
+  height: 4px;
+  opacity: 1;
+}
+
 .solution-card h3,
 .application-card h3,
-.process-step h3 {
+.process-step h3,
+.secondary-solution h3 {
   margin: 18px 0 0;
   color: var(--ink);
   font-size: 1.35rem;
@@ -516,7 +552,8 @@ select {
 
 .solution-card p,
 .application-card p,
-.process-step p {
+.process-step p,
+.secondary-solution p {
   margin: 12px 0 0;
   color: var(--muted);
   font-size: 0.92rem;
@@ -555,7 +592,7 @@ select {
   }
 
   .solutions-pin-wrap {
-    min-height: 390svh;
+    min-height: 350svh;
     padding-top: var(--header-height);
   }
 
@@ -572,6 +609,10 @@ select {
 
   .solution-copy .section-heading {
     max-width: 560px;
+  }
+
+  .solution-copy .chapter-title {
+    font-size: 4.2rem;
   }
 
   .solution-stack-panel {
@@ -603,7 +644,7 @@ select {
   }
 
   .solution-stack .solution-card h3 {
-    max-width: 13ch;
+    max-width: 16ch;
     font-size: clamp(1.7rem, 1.2rem + 1.2vw, 2.35rem);
   }
 
@@ -642,7 +683,8 @@ select {
 }
 
 .application-grid,
-.process-grid {
+.process-grid,
+.secondary-solution-grid {
   display: grid;
   gap: 12px;
 }
@@ -655,8 +697,33 @@ select {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.secondary-solutions {
+  display: grid;
+  gap: 18px;
+  margin-top: 16px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.secondary-heading {
+  max-width: 720px;
+}
+
+.secondary-heading h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.18;
+}
+
+.secondary-solution-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .application-card,
-.process-step {
+.process-step,
+.secondary-solution {
   min-height: 220px;
   padding: 20px;
   border: 1px solid var(--line);
@@ -665,7 +732,8 @@ select {
 }
 
 .application-card span,
-.process-step span {
+.process-step span,
+.secondary-solution span {
   color: var(--ice-cyan);
   font-size: 0.78rem;
   font-weight: 800;
@@ -813,10 +881,6 @@ select {
 
 @media (max-width: 1180px) {
   .hero-title {
-    font-size: 4.8rem;
-  }
-
-  .hero-title {
     font-size: 3.75rem;
   }
 
@@ -825,7 +889,8 @@ select {
   }
 
   .application-grid,
-  .process-grid {
+  .process-grid,
+  .secondary-solution-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -952,13 +1017,15 @@ select {
   .solution-board,
   .application-grid,
   .process-grid,
+  .secondary-solution-grid,
   .contact-list {
     grid-template-columns: 1fr;
   }
 
   .solution-card,
   .application-card,
-  .process-step {
+  .process-step,
+  .secondary-solution {
     min-height: auto;
   }
 

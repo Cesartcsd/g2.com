@@ -20,7 +20,7 @@ const SELECTORS = {
 };
 
 const CHAPTERS = [
-  { id: "hero", label: "Sistema G2", progress: 0 },
+  { id: "hero", label: "PCP com IA", progress: 0 },
   { id: "solutions", label: "Solu\u00e7\u00f5es", progress: 0.24 },
   { id: "applications", label: "Aplica\u00e7\u00f5es", progress: 0.48 },
   { id: "process", label: "Processo", progress: 0.72 },
@@ -503,7 +503,10 @@ function createScrollVideoScene({ reducedMotion }) {
     return createNoopScene();
   }
 
-  video.preload = "metadata";
+  const seekThreshold = 0.08;
+  const seekFallbackDelay = 180;
+
+  video.preload = reducedMotion ? "metadata" : "auto";
   video.muted = true;
   video.playsInline = true;
   video.setAttribute("muted", "");
@@ -521,17 +524,25 @@ function createScrollVideoScene({ reducedMotion }) {
 
   let duration = 0;
   let isReady = false;
+  let isSeeking = false;
   let targetProgress = 0;
   let seekFrame = 0;
+  let seekFallbackTimer = 0;
+  let seekSettleTimer = 0;
+  let pendingSeekTime = null;
+  let requestedSeekTime = 0;
 
   function start() {
+    video.addEventListener("seeked", handleSeekSettled);
+    video.addEventListener("canplay", handleSeekSettled);
+    video.addEventListener("error", handleVideoError, { once: true });
+
     if (video.readyState >= 1) {
       handleLoadedMetadata();
       return;
     }
 
-    video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    video.addEventListener("error", handleVideoError, { once: true });
+    video.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
     video.load();
   }
 
@@ -548,6 +559,7 @@ function createScrollVideoScene({ reducedMotion }) {
   }
 
   function handleVideoError() {
+    clearSeekFallback();
     video.classList.add("is-poster-only");
   }
 
@@ -570,14 +582,77 @@ function createScrollVideoScene({ reducedMotion }) {
     const maxTime = Math.max(0, duration - 0.06);
     const nextTime = maxTime * targetProgress;
 
-    if (Math.abs(video.currentTime - nextTime) < 0.045) {
+    if (Math.abs(video.currentTime - nextTime) < seekThreshold) {
+      pendingSeekTime = null;
       return;
     }
 
+    if (isSeeking) {
+      if (Math.abs(requestedSeekTime - nextTime) >= seekThreshold) {
+        pendingSeekTime = nextTime;
+      }
+
+      return;
+    }
+
+    seekToTime(nextTime);
+  }
+
+  function seekToTime(time) {
+    requestedSeekTime = time;
+    pendingSeekTime = null;
+    isSeeking = true;
+    scheduleSeekFallback();
+
     try {
-      video.currentTime = nextTime;
+      if (typeof video.fastSeek === "function") {
+        try {
+          video.fastSeek(time);
+        } catch {
+          video.currentTime = time;
+        }
+      } else {
+        video.currentTime = time;
+      }
+
+      scheduleSeekSettle();
     } catch {
+      clearSeekFallback();
+      isSeeking = false;
       video.classList.add("is-poster-only");
+    }
+  }
+
+  function scheduleSeekFallback() {
+    clearTimeout(seekFallbackTimer);
+    seekFallbackTimer = window.setTimeout(() => {
+      video.classList.add("is-seeking");
+    }, seekFallbackDelay);
+  }
+
+  function clearSeekFallback() {
+    clearTimeout(seekFallbackTimer);
+    video.classList.remove("is-seeking");
+  }
+
+  function scheduleSeekSettle() {
+    clearTimeout(seekSettleTimer);
+    seekSettleTimer = window.setTimeout(handleSeekSettled, 320);
+  }
+
+  function handleSeekSettled() {
+    clearTimeout(seekSettleTimer);
+
+    if (video.seeking) {
+      scheduleSeekSettle();
+      return;
+    }
+
+    isSeeking = false;
+    clearSeekFallback();
+
+    if (pendingSeekTime !== null && Math.abs(video.currentTime - pendingSeekTime) >= seekThreshold) {
+      seekToTime(pendingSeekTime);
     }
   }
 
